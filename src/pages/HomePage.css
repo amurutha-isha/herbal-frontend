@@ -1,0 +1,140 @@
+/* 🌿 REMOVE BODY BACKGROUND ❌ */
+/* body {
+  background: #f5fff5;
+} */
+
+/* 🌿 CONTAINER */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+
+  /* ✅ KEEP BACKGROUND TRANSPARENT */
+  background: transparent;
+
+  /* OPTIONAL GLASS EFFECT */
+  backdrop-filter: blur(6px);
+  border-radius: 15px;
+}
+
+/* 🌿 HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 🌿 HERO */
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+
+  /* 🔥 PREMIUM GLASS HERO */
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+
+  border-radius: 20px;
+  margin: 20px 0;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.hero h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  color: #1b5e20;
+}
+
+/* 🔍 SEARCH */
+.search {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  margin: 20px 0;
+
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 🔘 FILTERS */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid #2e7d32;
+  color: #2e7d32;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filters button:hover {
+  background: #2e7d32;
+  color: white;
+}
+
+/* 🌿 BUTTONS */
+button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #1b5e20;
+  transform: translateY(-1px);
+}
+
+/* 🌿 GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* 🌿 CARD */
+.card {
+  background: rgba(255,255,255,0.85);
+  border-radius: 15px;
+  overflow: hidden;
+
+  backdrop-filter: blur(6px);
+
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* 🌿 IMAGE */
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* 🌿 TEXT */
+.card h3 {
+  margin: 10px;
+}
+
+.card p {
+  margin: 0 10px 10px;
+  color: #555;
+}

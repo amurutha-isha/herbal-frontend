@@ -1,0 +1,37 @@
+/* 🌿 FORM GRID */
+.admin-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* 🌿 INPUTS */
+.admin-form input,
+.admin-form textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* 🌿 TEXTAREAS FULL WIDTH */
+.admin-form textarea {
+  grid-column: span 2;
+}
+
+/* 🌿 BUTTON */
+.admin-form button {
+  grid-column: span 2;
+  padding: 12px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.admin-form button:hover {
+  background: #1b5e20;
+}
