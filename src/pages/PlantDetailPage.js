@@ -12,7 +12,7 @@ function PlantDetailPage() {
       .catch(() => setPlant(null));
   }, [id]);
 
-  // 🌿 BOOKMARK FUNCTION
+  // 🌿 BOOKMARK FUNCTION (FIXED)
   const handleBookmark = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -31,9 +31,14 @@ function PlantDetailPage() {
         plant_id: plant.id
       })
     })
-      .then(res => res.json())
-      .then(() => alert("Added to My Garden 🌿"))
-      .catch(() => alert("Error adding plant ❌"));
+      .then(res => res.text()) // ✅ FIXED HERE
+      .then(msg => {
+        alert(msg); // shows backend message
+      })
+      .catch(err => {
+        console.log(err);
+        alert("Error adding plant ❌");
+      });
   };
 
   if (!plant) return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
@@ -41,9 +46,9 @@ function PlantDetailPage() {
   return (
     <div style={{ padding: "30px" }}>
 
-      {/* 🌿 IMAGE */}
+      {/* 🌿 IMAGE (FIXED) */}
       <img
-        src={plant.image_url}
+        src={`${window.location.origin}${plant.image_url}`}
         alt={plant.common_name}
         style={{
           width: "100%",
@@ -65,7 +70,7 @@ function PlantDetailPage() {
         {plant.scientific_name}
       </h3>
 
-      {/* 🌿 DETAILS BOX */}
+      {/* 🌿 DETAILS */}
       <div
         style={{
           maxWidth: "800px",
