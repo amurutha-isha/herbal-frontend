@@ -47,7 +47,7 @@ function HomePage() {
             <button
               onClick={() => navigate("/admin")}
               style={{
-                background: "#1b5e20",
+                background: "#329232",
                 borderRadius: "20px"
               }}
             >
@@ -62,7 +62,7 @@ function HomePage() {
       {/* 🌿 HERO SECTION */}
       <div className="hero">
         <h1>Virtual Herbal Garden</h1>
-        <p>Discover the healing power of plants </p>
+        
       </div>
 
       {/* 🔍 SEARCH */}

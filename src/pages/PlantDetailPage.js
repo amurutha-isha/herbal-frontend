@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function PlantDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [plant, setPlant] = useState(null);
 
   useEffect(() => {
@@ -12,7 +14,7 @@ function PlantDetailPage() {
       .catch(() => setPlant(null));
   }, [id]);
 
-  // 🌿 BOOKMARK FUNCTION (FIXED)
+  // 🌿 BOOKMARK FUNCTION
   const handleBookmark = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -31,9 +33,9 @@ function PlantDetailPage() {
         plant_id: plant.id
       })
     })
-      .then(res => res.text()) // ✅ FIXED HERE
+      .then(res => res.text())
       .then(msg => {
-        alert(msg); // shows backend message
+        alert(msg);
       })
       .catch(err => {
         console.log(err);
@@ -46,7 +48,7 @@ function PlantDetailPage() {
   return (
     <div style={{ padding: "30px" }}>
 
-      {/* 🌿 IMAGE (FIXED) */}
+      {/* 🌿 IMAGE */}
       <img
         src={`${window.location.origin}${plant.image_url}`}
         alt={plant.common_name}
@@ -66,7 +68,11 @@ function PlantDetailPage() {
       </h1>
 
       {/* 🌿 SCIENTIFIC NAME */}
-      <h3 style={{ textAlign: "center", fontStyle: "italic", color: "#2e7d32" }}>
+      <h3 style={{
+        textAlign: "center",
+        fontStyle: "italic",
+        color: "#2e7d32"
+      }}>
         {plant.scientific_name}
       </h3>
 
@@ -82,7 +88,6 @@ function PlantDetailPage() {
           boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
         }}
       >
-
         <p>
           <strong>Botanical Description:</strong><br />
           {plant.botanical_description || plant.description}
@@ -102,26 +107,47 @@ function PlantDetailPage() {
           <strong>Habitat:</strong><br />
           {plant.habitat}
         </p>
-
       </div>
 
-      {/* 🌿 BUTTON */}
-      <button
-        onClick={handleBookmark}
-        style={{
-          display: "block",
-          margin: "auto",
-          padding: "12px 25px",
-          background: "#2e7d32",
-          color: "white",
-          border: "none",
-          borderRadius: "10px",
-          cursor: "pointer",
-          fontSize: "16px"
-        }}
-      >
-        🌿 Add to My Garden
-      </button>
+      {/* 🌿 BUTTONS */}
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: "15px",
+        marginTop: "20px"
+      }}>
+
+        <button
+          onClick={handleBookmark}
+          style={{
+            padding: "12px 25px",
+            background: "#2e7d32",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontSize: "16px"
+          }}
+        >
+           Add to My Garden
+        </button>
+
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            padding: "12px 25px",
+            background: "#1b5e20",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontSize: "16px"
+          }}
+        >
+          ← Back to Home
+        </button>
+
+      </div>
 
     </div>
   );

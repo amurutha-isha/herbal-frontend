@@ -42,7 +42,30 @@ function MyGardenPage() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>🌿 My Garden</h1>
+
+      {/* 🔥 HEADER WITH BUTTON */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "20px"
+      }}>
+        <h1>🌿 My Garden</h1>
+
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            background: "#2e7d32",
+            color: "white",
+            border: "none",
+            padding: "10px 18px",
+            borderRadius: "20px",
+            cursor: "pointer"
+          }}
+        >
+          ← Back to Home
+        </button>
+      </div>
 
       {plants.length === 0 ? (
         <p>No plants added yet 🌱</p>

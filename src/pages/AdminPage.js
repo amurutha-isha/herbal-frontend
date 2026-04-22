@@ -1,197 +1,195 @@
 import { useEffect, useState } from "react";
 import "./AdminPage.css";
+import { useNavigate } from "react-router-dom";
 
 function AdminPage() {
   const [plants, setPlants] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
   const [form, setForm] = useState({
     common_name: "",
     scientific_name: "",
+    image_url: "",
+    category: "",
     description: "",
     botanical_description: "",
     medicinal_uses: "",
     benefits: "",
-    habitat: "",
-    image_url: "",
-    category: ""
+    habitat: ""
   });
 
-  const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
 
-  // 📥 LOAD PLANTS
-  const loadPlants = () => {
-    fetch("https://herbal-backend-6oh6.onrender.com/api/plants")
-      .then(res => res.json())
-      .then(data => setPlants(data))
-      .catch(err => console.error("Error loading plants:", err));
+  const API = "https://herbal-backend-6oh6.onrender.com/api/plants";
+
+  // ✅ FETCH FUNCTION (REUSABLE)
+  const fetchPlants = async () => {
+    try {
+      const res = await fetch(API);
+      const data = await res.json();
+      setPlants(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  // INITIAL LOAD
   useEffect(() => {
-    loadPlants();
+    fetchPlants();
   }, []);
 
-  // ➕ ADD / ✏️ UPDATE
-  const handleSubmit = () => {
-    if (!form.common_name || !form.scientific_name) {
-      alert("Fill required fields ❗");
-      return;
+  // INPUT
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // ✅ ADD
+  const handleAdd = async () => {
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+
+      if (!res.ok) throw new Error();
+
+      await fetchPlants(); // 🔥 FIX: auto refresh UI
+
+      setForm({
+        common_name: "",
+        scientific_name: "",
+        image_url: "",
+        category: "",
+        description: "",
+        botanical_description: "",
+        medicinal_uses: "",
+        benefits: "",
+        habitat: ""
+      });
+
+      alert("Added ✅");
+
+    } catch {
+      alert("Error ❌");
     }
-
-    const url = editId
-      ? `https://herbal-backend-6oh6.onrender.com/api/plants/${editId}`
-      : "https://herbal-backend-6oh6.onrender.com/api/plants";
-
-    const method = editId ? "PUT" : "POST";
-
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    })
-      .then(res => res.text())
-      .then(() => {
-        alert(editId ? "Updated ✅" : "Added 🌿");
-
-        // reset form
-        setForm({
-          common_name: "",
-          scientific_name: "",
-          description: "",
-          botanical_description: "",
-          medicinal_uses: "",
-          benefits: "",
-          habitat: "",
-          image_url: "",
-          category: ""
-        });
-
-        setEditId(null);
-        loadPlants();
-      })
-      .catch(() => alert("Error saving plant ❌"));
   };
 
-  // ❌ DELETE
-  const handleDelete = (id) => {
-    if (!window.confirm("Delete this plant?")) return;
-
-    fetch(`https://herbal-backend-6oh6.onrender.com/api/plants/${id}`, {
-      method: "DELETE"
-    })
-      .then(() => {
-        alert("Deleted ❌");
-        loadPlants();
-      })
-      .catch(() => alert("Error deleting plant ❌"));
-  };
-
-  // ✏️ EDIT
+  // ✅ EDIT
   const handleEdit = (plant) => {
-    setForm({
-      common_name: plant.common_name || "",
-      scientific_name: plant.scientific_name || "",
-      description: plant.description || "",
-      botanical_description: plant.botanical_description || "",
-      medicinal_uses: plant.medicinal_uses || "",
-      benefits: plant.benefits || "",
-      habitat: plant.habitat || "",
-      image_url: plant.image_url || "",
-      category: plant.category || ""
-    });
+    setForm(plant);
+    setEditingId(plant.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    setEditId(plant.id);
+  // ✅ UPDATE
+  const handleUpdate = async () => {
+    try {
+      const res = await fetch(`${API}/${editingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+
+      if (!res.ok) throw new Error();
+
+      await fetchPlants(); // 🔥 FIX: auto refresh UI
+
+      setEditingId(null);
+
+      setForm({
+        common_name: "",
+        scientific_name: "",
+        image_url: "",
+        category: "",
+        description: "",
+        botanical_description: "",
+        medicinal_uses: "",
+        benefits: "",
+        habitat: ""
+      });
+
+      alert("Updated ✅");
+
+    } catch {
+      alert("Update failed ❌");
+    }
+  };
+
+  // ✅ DELETE
+  const handleDelete = async (id) => {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+
+    await fetchPlants(); // 🔥 FIX
+  };
+
+  // LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>🌿 Admin Dashboard</h1>
+    <div className="container">
 
-      {/* 🌿 FORM */}
-      <div className="admin-form">
-        <input
-          placeholder="Common Name"
-          value={form.common_name}
-          onChange={e => setForm({ ...form, common_name: e.target.value })}
-        />
+      {/* HEADER */}
+      <div className="admin-header">
+        <h1>🌿 Admin Dashboard</h1>
 
-        <input
-          placeholder="Scientific Name"
-          value={form.scientific_name}
-          onChange={e => setForm({ ...form, scientific_name: e.target.value })}
-        />
-
-        <input
-          placeholder="Image URL"
-          value={form.image_url}
-          onChange={e => setForm({ ...form, image_url: e.target.value })}
-        />
-
-        <input
-          placeholder="Category"
-          value={form.category}
-          onChange={e => setForm({ ...form, category: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Description"
-          value={form.description}
-          onChange={e => setForm({ ...form, description: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Botanical Description"
-          value={form.botanical_description}
-          onChange={e => setForm({ ...form, botanical_description: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Medicinal Uses"
-          value={form.medicinal_uses}
-          onChange={e => setForm({ ...form, medicinal_uses: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Benefits"
-          value={form.benefits}
-          onChange={e => setForm({ ...form, benefits: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Habitat"
-          value={form.habitat}
-          onChange={e => setForm({ ...form, habitat: e.target.value })}
-        />
-
-        <button onClick={handleSubmit}>
-          {editId ? "Update Plant ✏️" : "Add Plant ➕"}
-        </button>
+        <div className="admin-actions">
+          <button onClick={() => navigate("/home")}>← Back</button>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
 
-      {/* 🌿 TABLE */}
-      <table border="1" cellPadding="10">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Scientific</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      {/* FORM */}
+      <div className="admin-form">
 
-        <tbody>
-          {plants.map(p => (
-            <tr key={p.id}>
-              <td>{p.id}</td>
-              <td>{p.common_name}</td>
-              <td>{p.scientific_name}</td>
-              <td>
+        <input name="common_name" placeholder="Common Name" value={form.common_name} onChange={handleChange} />
+        <input name="scientific_name" placeholder="Scientific Name" value={form.scientific_name} onChange={handleChange} />
+
+        <input name="image_url" placeholder="Image URL" value={form.image_url} onChange={handleChange} />
+        <input name="category" placeholder="Category" value={form.category} onChange={handleChange} />
+
+        <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+        <textarea name="botanical_description" placeholder="Botanical Description" value={form.botanical_description} onChange={handleChange} />
+        <textarea name="medicinal_uses" placeholder="Medicinal Uses" value={form.medicinal_uses} onChange={handleChange} />
+        <textarea name="benefits" placeholder="Benefits" value={form.benefits} onChange={handleChange} />
+        <textarea name="habitat" placeholder="Habitat" value={form.habitat} onChange={handleChange} />
+
+        <button
+          className="add-btn"
+          onClick={editingId ? handleUpdate : handleAdd}
+        >
+          {editingId ? "Update Plant ✏️" : "Add Plant +"}
+        </button>
+
+      </div>
+
+      {/* CARDS */}
+      <div className="admin-grid">
+        {plants.map(p => (
+          <div className="admin-card" key={p.id}>
+            <img src={p.image_url} alt="" />
+
+            <div className="admin-card-body">
+              <h3>{p.common_name}</h3>
+              <p>{p.scientific_name}</p>
+
+              <div className="card-buttons">
                 <button onClick={() => handleEdit(p)}>Edit</button>
                 <button onClick={() => handleDelete(p.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </div>
+
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 }

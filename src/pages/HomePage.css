@@ -29,16 +29,18 @@
   text-align: center;
   padding: 40px 20px;
 
-  /* 🔥 PREMIUM GLASS HERO */
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
+  /* ✅ SIMPLE IMAGE ONLY */
+  background: url("/public/images/bg.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   border-radius: 20px;
   margin: 20px 0;
 
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgb(9, 9, 9);
 }
-
 .hero h1 {
   font-size: 32px;
   margin-bottom: 10px;
